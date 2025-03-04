@@ -3,6 +3,14 @@
 use App\Http\Controllers\LevelController;
 use Illuminate\Support\Facades\Route;
 
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\KategoriController;
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +27,6 @@ Route::get('/', function () {
 });
 
 Route::get('/level', [LevelController::class, 'index']);
+
+Route::get('/level', [LevelController::class, 'index']);
+Route::get('/kategori', [KategoriController::class, 'index']);
