@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Data User</title>
@@ -14,10 +14,10 @@
         </tr>
     </table>
 </body>
-</html>
+</html> --}}
 
 
-{{-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Data User</title>
@@ -32,13 +32,13 @@
             <th>ID Level Pengguna</th>
         </tr>
         {{-- @foreach ($data as $d) --}}
-        {{-- <tr>
+        <tr>
             <td>{{ $data->user_id }}</td>
             <td>{{ $data->username }}</td>
             <td>{{ $data->nama }}</td>
             <td>{{ $data->level_id }}</td>
-        </tr> --}}
-        {{-- @endforeach --}}
-    {{-- </table>
+        </tr>
+        {{-- @endforeach  --}}
+    </table>
 </body>
-</html> --}} 
+</html> 
