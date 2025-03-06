@@ -26,8 +26,8 @@ class UserController extends Controller
         // ];
         // UserModel::create($data); // tambahkan data ke tabel m_user
 
-        // // UserModel::where('username', 'customer-1') ->update($data);
-        // // UserModel::insert($data);// tambahkan data ke tabel m_user
+        // UserModel::where('username', 'customer-1') ->update($data);
+        // UserModel::insert($data);// tambahkan data ke tabel m_user
 
         // // coba akses model UserModel
         // $user = UserModel::all(); // ambil semua data dari tabel m_user
@@ -47,7 +47,14 @@ class UserController extends Controller
         // $user = UserModel::findOrFail(1); // ambil data user dengan level_id 1
         // return view('user', ['data' => $user]);
 
-        $user = UserModel::where('username', 'manager9')->firstOrFail();
+        // $user = UserModel::where('username', 'manager9')->firstOrFail();
+        // return view('user', ['data' => $user]);
+
+        // $user = UserModel::where('level_id', 2)->count();
+        // dd($user);
+        // return view('user', ['data' => $user]);
+
+        $user = UserModel::where('level_id', 2)->count();
         return view('user', ['data' => $user]);
     }
 }
