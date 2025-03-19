@@ -38,6 +38,14 @@ Route::put('/kategori/{id}', [KategoriController::class, 'update']);
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
+Route::get('/level/tambah', [LevelController::class, 'tambah']);
+Route::post('/level/tambah_simpan', [LevelController::class, 'tambah_simpan']);
+Route::get('/level/tambah', [LevelController::class, 'tambah'])->name('level.tambah');
+
+Route::get('/kategori/create', [KategoriController::class, 'create']);
+Route::post('/kategori', [KategoriController::class, 'store']);
+
+
 // use App\Http\Controllers\KategoriController;
 // use App\Http\Controllers\LevelController;
 // use App\Http\Controllers\UserController;
