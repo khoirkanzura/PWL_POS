@@ -324,6 +324,11 @@ return [
         ],
         ['header' => 'menu'],
         [
+            'text' => 'CRUD',
+            'icon' => 'fas fa-cogs',
+            'url' => 'm_user',
+        ],
+        [
             'text' => 'Level',
             'icon' => 'fas fa-regular fa-user-plus',
             'url' => 'level/tambah',

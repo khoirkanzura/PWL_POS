@@ -8,16 +8,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    
     public function index()
     {
-        $user = UserModel::with('level')->get(); // Mengambil semua data dari tabel users
-        return view('user', ['data' => $user]);
-
-        // $user = UserModel::with('level')->get(); // Mengambil semua data dari tabel users
-        // dd($user);
-        // $user = UserModel::all(); // Mengambil semua data dari tabel users
-        // return view('user', ['data' => $user]);
+        $users = UserModel::all();
+        return view('user_index', ['users' => $users]);
     }
 
     public function tambah()
@@ -27,6 +21,34 @@ class UserController extends Controller
 
     public function tambah_simpan(Request $request)
     {
+        // Validasi input dengan aturan ketat
+        $request->validate([
+            'username' => 'required|alpha_num|unique:m_user,username|min:5|max:20',
+            'nama' => 'required|string|min:3|max:50',
+            'password' => 'required|string|min:6|max:20',
+            'level_id' => 'required|integer|exists:m_user_levels,id'
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.alpha_num' => 'Username hanya boleh mengandung huruf dan angka.',
+            'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
+            'username.min' => 'Username minimal 5 karakter.',
+            'username.max' => 'Username maksimal 20 karakter.',
+
+            'nama.required' => 'Nama wajib diisi.',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.min' => 'Nama minimal 3 karakter.',
+            'nama.max' => 'Nama maksimal 50 karakter.',
+
+            'password.required' => 'Password wajib diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.max' => 'Password maksimal 20 karakter.',
+
+            'level_id.required' => 'Level ID wajib diisi.',
+            'level_id.integer' => 'Level ID harus berupa angka.',
+            'level_id.exists' => 'Level ID tidak valid.'
+        ]);
+
         // Simpan data ke database
         UserModel::create([
             'username' => $request->username,
@@ -35,41 +57,73 @@ class UserController extends Controller
             'level_id' => $request->level_id
         ]);
 
-        return redirect('/user');
+        return redirect('/user')->with('success', 'User berhasil ditambahkan!');
     }
 
     public function ubah($id)
     {
-        $user = UserModel::find($id);
+        $user = UserModel::findOrFail($id);
         return view('user_ubah', ['data' => $user]);
     }
-    
 
-        public function ubah_simpan($id, Request $request)
+    public function ubah_simpan($id, Request $request)
     {
-        $user = UserModel::find($id);
+        // Validasi input saat update
+        $request->validate([
+            'username' => 'required|alpha_num|unique:m_user,username,' . $id . '|min:5|max:20',
+            'nama' => 'required|string|min:3|max:50',
+            'password' => 'nullable|string|min:6|max:20',
+            'level_id' => 'required|integer|exists:m_user_levels,id'
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.alpha_num' => 'Username hanya boleh mengandung huruf dan angka.',
+            'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
+            'username.min' => 'Username minimal 5 karakter.',
+            'username.max' => 'Username maksimal 20 karakter.',
 
-        $user->username = $request->username;
-        $user->nama = $request->nama;
-        $user->password = Hash::make($request->password);
-        $user->level_id = $request->level_id;
+            'nama.required' => 'Nama wajib diisi.',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.min' => 'Nama minimal 3 karakter.',
+            'nama.max' => 'Nama maksimal 50 karakter.',
 
-        $user->save();
+            'password.string' => 'Password harus berupa teks.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.max' => 'Password maksimal 20 karakter.',
 
-        return redirect('/user');
+            'level_id.required' => 'Level ID wajib diisi.',
+            'level_id.integer' => 'Level ID harus berupa angka.',
+            'level_id.exists' => 'Level ID tidak valid.'
+        ]);
+
+        $user = UserModel::findOrFail($id);
+
+        $data = [
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'level_id' => $request->level_id,
+        ];
+
+        // Hanya update password jika diisi
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect('/user')->with('success', 'User berhasil diubah!');
     }
 
     public function hapus($id)
     {
-        $user = UserModel::find($id);
+        $user = UserModel::findOrFail($id);
         $user->delete();
 
-        return redirect('/user');
+        return redirect('/user')->with('success', 'User berhasil dihapus!');
     }
-
-    
-    
 }
+
+
+
  
         // tambah data user dengan Eloquent Model
         // $data = [
