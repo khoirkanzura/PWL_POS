@@ -4,10 +4,13 @@ namespace App\DataTables;
 
 use App\Models\KategoriModel;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\Editor\Editor;
+use Yajra\DataTables\Html\Editor\Fields;
+use Yajra\DataTables\Services\DataTable;
 
 class KategoriDataTable extends DataTable
 {
@@ -16,33 +19,33 @@ class KategoriDataTable extends DataTable
      *
      * @param QueryBuilder $query Results from query() method.
      */
-    public function dataTable($query)
+    public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return datatables()
-            ->eloquent($query)
-            ->addColumn('action', function ($kategori) {
-                return '
-                    <a href="' . route('kategori.edit', $kategori->kategori_id) . '" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="' . route('kategori.destroy', $kategori->kategori_id) . '" method="POST" style="display:inline;">
-                        ' . csrf_field() . '
-                        ' . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin ingin menghapus kategori ini?\')">
-                            <i class="fas fa-trash"></i> Hapus
-                        </button>
-                    </form>';
-            })
-            ->rawColumns(['action']);
-    }    
+        return (new EloquentDataTable($query))
+            ->addColumn('action', function($kategori) {
+                return '<div class="text-center" role="group" aria-label="Action Buttons">
+                            <div class="btn-group-vertical">
+                                <a href="'.route('kategori.edit', $kategori->kategori_id).'" class="btn btn-warning btn-sm mb-1 w-100">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="'.route('kategori.destroy', $kategori->kategori_id).'" method="POST" style="display:inline; width: 100%;">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                    <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm(\'Apakah Anda yakin ingin menghapus kategori ini?\')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>';
+            });
+    }
 
     /**
      * Get the query source of dataTable.
      */
-    
     public function query(KategoriModel $model): QueryBuilder
     {
-        return $model->newQuery()->orderBy('kategori_id', 'asc');
+        return $model->newQuery();
     }
 
     /**
@@ -51,19 +54,19 @@ class KategoriDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('kategori-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->setTableId('kategori-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            ]);
     }
 
     /**
@@ -78,13 +81,12 @@ class KategoriDataTable extends DataTable
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')
-                ->title('Aksi')
                 ->exportable(false)
                 ->printable(false)
-                ->orderable(false)
-                ->searchable(false)
+                ->width(150)
+                ->addClass('text-center')
         ];
-    }    
+    }
 
     /**
      * Get the filename for export.

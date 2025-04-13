@@ -1,75 +1,57 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Data User</title>
-    </head>
-    <body>
-        <h1>Data User</h1>
-        <table border="1" cellpadding="2" cellspacing="0">
-            <tr>
-                <td>ID</td>
-                <td>Username</td>
-                <td>Nama</td>
-                <td>ID Level Pengguna</td>
-                <td>Aksi</td>
-            </tr>
-            @foreach ($data as $d)
-                <tr>
-                    <td>{{ $d->user_id }}</td>
-                    <td>{{ $d->username }}</td>
-                    <td>{{ $d->nama }}</td>
-                    <td>{{ $d->level_id }}</td>
-                    <td><a href="user/ubah/{{ $d->user_id }}">Ubah</a> | 
-                        <a href="user/hapus/{{ $d->user_id }}">Hapus</a>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
-        <h3><a href="user/tambah">Tambah</a></h3>
-    </body>
-</html>
+@extends('layout.app')
 
-{{-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Data User</title>
-</head>
-<body>
-    <h2>Data User</h2>
-    <table border="1">
-        <tr>
-            <th>Jumlah Pengguna</th>
-        </tr>
-        <tr>
-            <td>{{ $data }}</td>
-        </tr>
-    </table>
-</body>
-</html> --}}
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Daftar User</h3>
+        </div>
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Username</th>
+                        <th>Nama</th>
+                        <th>Kode Level</th>
+                        <th>Nama Level</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $key => $user)
+                    <tr>
+                        <td>{{ $key+1 }}</td>
+                        <td>{{ $user->username }}</td>
+                        <td>{{ $user->nama }}</td>
+                        <td>{{ $user->level->level_kode }}</td>
+                        <td>{{ $user->level->level_nama }}</td>
+                        <td>
+                            <a href="{{ url('/user/ubah/'.$user->user_id) }}" class="btn btn-warning btn-sm d-inline-flex align-items-center">
+                                <i class="fas fa-edit"></i>&nbsp; Edit
+                            </a>
+                            <a href="{{ url('/user/hapus/'.$user->user_id) }}" class="btn btn-danger btn-sm d-inline-flex align-items-center" onclick="return confirm('Yakin ingin menghapus?')">
+                                <i class="fas fa-trash"></i>&nbsp; Delete
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-{{-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Data User</title>
-</head>
-<body>
-    <h1>Data User</h1>
-    <table border="1" cellpadding="2" cellspacing="0">
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Nama</th>
-            <th>ID Level Pengguna</th>
-        </tr>
-        {{-- @foreach ($data as $d) --}}
-        {{-- <tr>
-            <td>{{ $data->user_id }}</td>
-            <td>{{ $data->username }}</td>
-            <td>{{ $data->nama }}</td>
-            <td>{{ $data->level_id }}</td>
-        </tr>
-        {{-- @endforeach  --}}
-    {{-- </table>
-</body>
-</html>  --}} 
+        <!-- Tombol Tambah User di bagian bawah kanan -->
+        <div class="card-footer text-end">
+            <a href="{{ url('/user/tambah') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Tambah User
+            </a>
+        </div>
+    </div>
+</div>
+@endsection

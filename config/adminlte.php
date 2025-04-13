@@ -264,22 +264,27 @@ return [
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => false,
+    'disable_darkmode_routes' => false,
 
     /*
     |--------------------------------------------------------------------------
-    | Laravel Mix
+    | Laravel Asset Bundling
     |--------------------------------------------------------------------------
     |
-    | Here we can enable the Laravel Mix option for the admin panel.
+    | Here we can enable the Laravel Asset Bundling option for the admin panel.
+    | Currently, the next modes are supported: 'mix', 'vite' and 'vite_js_only'.
+    | When using 'vite_js_only', it's expected that your CSS is imported using
+    | JavaScript. Typically, in your application's 'resources/js/app.js' file.
+    | If you are not using any of these, leave it as 'false'.
     |
-    | For detailed instructions you can look the laravel mix section here:
+    | For detailed instructions you can look the asset bundling section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Other-Configuration
     |
     */
 
-    'enabled_laravel_mix' => false,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    'laravel_asset_bundling' => false,
+    'laravel_css_path' => 'css/app.css',
+    'laravel_js_path' => 'js/app.js',
 
     /*
     |--------------------------------------------------------------------------
@@ -294,6 +299,7 @@ return [
     */
 
     'menu' => [
+        
         // Navbar items:
         [
             'type' => 'navbar-search',
@@ -310,6 +316,7 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
+        
         [
             'text' => 'blog',
             'url' => 'admin/blog',
@@ -322,27 +329,6 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'menu'],
-        [
-            'text' => 'CRUD',
-            'icon' => 'fas fa-cogs',
-            'url' => 'm_user',
-        ],
-        [
-            'text' => 'Level',
-            'icon' => 'fas fa-regular fa-user-plus',
-            'url' => 'level/tambah',
-        ],
-        [
-            'text' => 'User',
-            'icon' => 'fas fa-solid fa-user',
-            'url' => 'user/tambah',
-        ],
-        [
-            'text' => 'Kategori', // Judul menu
-            'icon' => 'fas fa-list', // Icon yang digunakan
-            'url' => 'kategori', // URL menu kategori
-        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -354,6 +340,8 @@ return [
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
+        
+        
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
@@ -362,6 +350,7 @@ return [
                     'text' => 'level_one',
                     'url' => '#',
                 ],
+                
                 [
                     'text' => 'level_one',
                     'url' => '#',
@@ -391,7 +380,21 @@ return [
                     'url' => '#',
                 ],
             ],
+            [
+            'text' => 'Manage Kategori',
+            'url' => 'kategori',
+            'icon' => 'fas  fa-list',
         ],
+        
+        ],
+        [
+            'text' => 'Manage Kategori',
+            'url' => 'kategori',
+            'icon' => 'fas fa-list',
+            
+        ],
+        
+        
         ['header' => 'labels'],
         [
             'text' => 'important',
@@ -408,6 +411,7 @@ return [
             'icon_color' => 'cyan',
             'url' => '#',
         ],
+        
     ],
 
     /*
