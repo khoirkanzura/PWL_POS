@@ -302,5 +302,4 @@ public function update_ajax(Request $request, $id){
 
         return redirect('/');
     }
-
 }
