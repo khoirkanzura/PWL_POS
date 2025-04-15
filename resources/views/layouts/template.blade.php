@@ -23,7 +23,8 @@
 
     @stack('css') <!-- Digunakan untuk memanggil custom CSS dari perintah push('css') pada masing-masing view -->
 </head>
-
+<!-- navbar -->
+@include('layouts.header')
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->

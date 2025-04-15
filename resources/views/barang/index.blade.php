@@ -3,7 +3,7 @@
 @section('content')
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">Daftar Barang</h3>
+            <h3 class="card-title">Daftar Barang yang tersedia dalam sistem</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
                 <button onclick="modalAction('{{url('barang/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
