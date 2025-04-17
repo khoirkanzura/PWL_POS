@@ -10,6 +10,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 
 /*
@@ -154,4 +155,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_pdf', [BarangController::class, 'export_pdf']);
         });
     });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard'); // atau view lain yang kamu gunakan
+    })->name('dashboard');
+    
+Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
+    Route::group(['prefix' => 'profile'], function () {
+
+        // Route utama /profile => redirect ke edit
+        Route::get('/', [ProfileController::class, 'index']);
+
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::put('/update', [ProfileController::class, 'update'])->name('profile.update');
+        });
+
+    });
+});
 });

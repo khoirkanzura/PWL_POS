@@ -23,6 +23,9 @@
 
     @stack('css') <!-- Digunakan untuk memanggil custom CSS dari perintah push('css') pada masing-masing view -->
 </head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
 <!-- navbar -->
 @include('layouts.header')
   <!-- Main Sidebar Container -->
@@ -36,25 +39,25 @@
     <!-- Sidebar -->
     @include('layouts.sidebar')
     <!-- /.sidebar -->
-  </aside>
+   </aside>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     @include('layouts.breadcrumb')
 
-    <!-- Main content -->
-    <section class="content">
-        @yield('content')
+      <!-- Main content -->
+      <section class="content">
+          @yield('content')
 
-    </section>
-    <!-- /.content -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    @include('layouts.footer')
   </div>
-  <!-- /.content-wrapper -->
-
-  @include('layouts.footer')
-</div>
-<!-- ./wrapper -->
+  <!-- ./wrapper -->
 
 <!-- jQuery -->
 <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
