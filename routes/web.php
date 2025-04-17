@@ -160,12 +160,10 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard'); // atau view lain yang kamu gunakan
     })->name('dashboard');
     
-Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
-    Route::group(['prefix' => 'profile'], function () {
-
+    Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
+        Route::group(['prefix' => 'profile'], function () {
         // Route utama /profile => redirect ke edit
         Route::get('/', [ProfileController::class, 'index']);
-
         Route::middleware(['auth'])->group(function () {
             Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::put('/update', [ProfileController::class, 'update'])->name('profile.update');

@@ -159,7 +159,6 @@
         margin-top: 8px;
     }
 
-    /* Existing Sidebar Styles Remain Unchanged */
     .sidebar {
         width: 250px;
         min-height: 100vh;
@@ -204,7 +203,7 @@
     // Toggle sidebar on mobile (you'll need to add a toggle button in your navbar)
     document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.querySelector('.sidebar-toggle'); // Add this button in your navbar
+        const toggleBtn = document.querySelector('.sidebar-toggle'); 
         
         if (toggleBtn) {
             toggleBtn.addEventListener('click', function() {
