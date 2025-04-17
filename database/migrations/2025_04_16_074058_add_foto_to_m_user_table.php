@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('m_user', function (Blueprint $table) {
-            $table->string('foto')->nullable()->after('nama'); // sesuaikan posisi setelah kolom apa
+            $table->string('foto')->nullable()->after('nama'); 
         });
     }
 

@@ -112,7 +112,6 @@
         background: linear-gradient(135deg, #3f51b5 0%, #2196f3 100%);
     }
     
-    /* Avatar Upload Styles */
     .avatar-upload {
         position: relative;
         max-width: 180px;
@@ -161,13 +160,11 @@
         font-size: 80px;
     }
     
-    /* Form Styles */
     .needs-validation .form-control:focus {
         border-color: #3f51b5;
         box-shadow: 0 0 0 0.25rem rgba(63, 81, 181, 0.25);
     }
     
-    /* Button Styles */
     .btn-outline-secondary {
         border-color: #dee2e6;
     }
@@ -176,7 +173,6 @@
         background-color: #f8f9fa;
     }
     
-    /* Alert Styles */
     .alert {
         border-radius: 8px;
         border-left: 5px solid;
