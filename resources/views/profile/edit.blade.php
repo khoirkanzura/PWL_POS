@@ -224,7 +224,7 @@
         }
     }
 
-    // Add click event to file input when avatar is clicked
+    // Add click event to file input when profile is clicked
     document.addEventListener('DOMContentLoaded', function() {
         const avatarPreview = document.querySelector('.avatar-preview');
         const fileInput = document.getElementById('foto');
