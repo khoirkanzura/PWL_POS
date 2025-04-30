@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LevelModel extends Model
 {
+    
     protected $table = 'm_level'; // Nama tabel di database
     protected $primaryKey = 'level_id'; // Primary key yang benar
     public $timestamps = false; // Matikan timestamps jika tidak digunakan
