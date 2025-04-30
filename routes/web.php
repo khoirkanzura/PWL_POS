@@ -22,6 +22,7 @@ use App\Http\Controllers\SupplierController;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
+
 */
 
 Route::pattern('id', '[0-9]+');
