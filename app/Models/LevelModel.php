@@ -10,8 +10,8 @@ class LevelModel extends Model
     
     protected $table = 'm_level'; // Nama tabel di database
     protected $primaryKey = 'level_id'; // Primary key yang benar
-    public $timestamps = false; // Matikan timestamps jika tidak digunakan
-
+    // public $timestamps = false; // Matikan timestamps jika tidak digunakan
+    public $timestamps = true; // Aktifkan timestamps agar created_at dan updated_at otomatis terisi
     protected $fillable = ['level_nama', 'level_kode']; // Tambahkan level_kode jika diperlukan
 
     /**
