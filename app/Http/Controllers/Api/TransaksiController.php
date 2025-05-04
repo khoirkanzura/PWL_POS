@@ -12,13 +12,13 @@
  {
      public function index()
      {
-         $data = PenjualanModel::with(['user', 'details.barang'])->get();
+         $data = PenjualanModel::with(['user'])->get();
          return response()->json($data);
      }
      
      public function show($transaksi)
      {
-         $penjualan = PenjualanModel::with(['user', 'details.barang'])->findOrFail($transaksi);
+         $penjualan = PenjualanModel::with(['user'])->findOrFail($transaksi);
          return response()->json($penjualan);
      }
  

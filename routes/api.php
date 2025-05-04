@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\BarangController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,3 +51,11 @@ Route::get('kategoris', [KategoriController::class, 'index']);
  Route::get('barangs/{barang}', [BarangController::class, 'show']);
  Route::put('barangs/{barang}', [BarangController::class, 'update']);
  Route::delete('barangs/{barang}', [BarangController::class, 'destroy']);
+
+ Route::prefix('transaksi')->group(function () {
+ Route::get('/', [TransaksiController::class, 'index']);
+ Route::get('/{transaksi}', [TransaksiController::class, 'show']);
+ Route::post('/', [TransaksiController::class, 'store']);
+ Route::put('/{transaksi}', [TransaksiController::class, 'update']);
+ Route::delete('/{transaksi}', [TransaksiController::class, 'destroy']);
+});
