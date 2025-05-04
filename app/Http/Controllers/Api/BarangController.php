@@ -2,123 +2,159 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\BarangModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BarangModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
+    // Menampilkan semua barang
     public function index()
     {
-        $barangs = BarangModel::with('kategori')->get();
-        return response()->json([
-            'success' => true,
-            'data' => $barangs
-        ]);
+        $barangs = BarangModel::all();
+        
+        // Menambahkan URL gambar untuk setiap barang
+        $barangs->map(function ($barang) {
+            $barang->image_url = $barang->getImageUrlAttribute();
+            return $barang;
+        });
+
+        return response()->json($barangs);
     }
 
+    // Menyimpan data barang baru
     public function store(Request $request)
     {
-        // Validasi
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'kategori_id' => 'required', // Hapus exists validation
-            'barang_kode' => 'required|unique:m_barang,barang_kode',
-            'barang_nama' => 'required|string|max:100',
-            'harga_beli' => 'required|numeric|min:0',
-            'harga_jual' => 'required|numeric|min:0',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'barang_kode' => 'required',
+            'barang_nama' => 'required',
+            'kategori_id' => 'required|exists:m_kategori,kategori_id', // Pastikan kategori_id ada di tabel kategori
+            'harga_beli' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validasi gambar
         ]);
-        
+
         // Jika validasi gagal
-        if($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        // Upload gambar
-        $imagePath = $request->file('foto')->store('barang', 'public');
+        // Proses upload gambar
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('barang_images', 'public'); // upload gambar ke storage public
+        } else {
+            $imagePath = null; // jika tidak ada gambar
+        }
 
-        // Create barang
+        // Simpan data barang ke database
         $barang = BarangModel::create([
-            'kategori_id' => $request->kategori_id,
             'barang_kode' => $request->barang_kode,
             'barang_nama' => $request->barang_nama,
+            'kategori_id' => $request->kategori_id,
             'harga_beli' => $request->harga_beli,
             'harga_jual' => $request->harga_jual,
-            'foto' => $imagePath, // Simpan path gambar yang diupload
+            'image' => $imagePath, // simpan path gambar
         ]);
 
+        // Kembalikan response dengan URL gambar
         return response()->json([
-            'success' => true,
-            'data' => $barang,
-            'message' => 'Barang berhasil dibuat'
+            'message' => 'Barang created successfully',
+            'data' => [
+                'barang' => $barang,
+                'image_url' => $barang->getImageUrlAttribute(),
+            ],
         ], 201);
     }
 
-    public function show(BarangModel $barang)
+    // Menampilkan data barang berdasarkan ID
+    public function show($barang_id)
     {
-        return response()->json([
-            'success' => true,
-            'data' => $barang->load('kategori')
-        ]);
+        $barang = BarangModel::find($barang_id);
+
+        if (!$barang) {
+            return response()->json(['message' => 'Barang not found'], 404);
+        }
+
+        // Menambahkan URL gambar
+        $barang->image_url = $barang->getImageUrlAttribute();
+
+        return response()->json($barang);
     }
 
-    public function update(Request $request, BarangModel $barang)
+    // Memperbarui data barang
+    public function update(Request $request, $barang_id)
     {
+        $barang = BarangModel::find($barang_id);
+
+        if (!$barang) {
+            return response()->json(['message' => 'Barang not found'], 404);
+        }
+
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'kategori_id' => 'sometimes|exists:m_kategori,kategori_id',
-            'barang_kode' => 'sometimes|unique:m_barang,barang_kode,'.$barang->barang_id.',barang_id',
-            'barang_nama' => 'sometimes|string|max:100',
-            'harga_beli' => 'sometimes|numeric|min:0',
-            'harga_jual' => 'sometimes|numeric|min:0', // Diperbaiki dari 'harga_jual' yang salah ketik
-            'foto' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'barang_kode' => 'required',
+            'barang_nama' => 'required',
+            'kategori_id' => 'required|exists:m_kategori,kategori_id', // Pastikan kategori_id ada di tabel kategori
+            'harga_beli' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validasi gambar
         ]);
 
-        if($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+        // Jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        $data = $request->except('foto');
-
-        // Handle image update
-        if ($request->hasFile('foto')) {
-            // Delete old image
-            if ($barang->foto) {
-                Storage::disk('public')->delete($barang->foto);
+        // Proses upload gambar jika ada file
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($barang->image) {
+                Storage::disk('public')->delete($barang->image);
             }
-            
-            // Store new image
-            $data['foto'] = $request->file('foto')->store('barang', 'public');
+
+            // Upload gambar baru
+            $imagePath = $request->file('image')->store('barang_images', 'public');
+            $barang->image = $imagePath;
         }
 
-        $barang->update($data);
+        // Perbarui data barang
+        $barang->update([
+            'barang_kode' => $request->barang_kode,
+            'barang_nama' => $request->barang_nama,
+            'kategori_id' => $request->kategori_id,
+            'harga_beli' => $request->harga_beli,
+            'harga_jual' => $request->harga_jual,
+        ]);
 
+        // Kembalikan response
         return response()->json([
-            'success' => true,
+            'message' => 'Barang updated successfully',
             'data' => $barang,
-            'message' => 'Barang berhasil diperbarui'
+            'image_url' => $barang->getImageUrlAttribute(),
         ]);
     }
 
-    public function destroy(BarangModel $barang)
+    // Menghapus data barang
+    public function destroy($barang_id)
     {
-        // Delete image if exists
-        if ($barang->foto) {
-            Storage::disk('public')->delete($barang->foto);
+        $barang = BarangModel::find($barang_id);
+
+        if (!$barang) {
+            return response()->json(['message' => 'Barang not found'], 404);
         }
 
+        // Hapus gambar jika ada
+        if ($barang->image) {
+            Storage::disk('public')->delete($barang->image);
+        }
+
+        // Hapus data barang
         $barang->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Barang berhasil dihapus'
-        ]);
+        // Kembalikan response
+        return response()->json(['message' => 'Barang deleted successfully']);
     }
 }
