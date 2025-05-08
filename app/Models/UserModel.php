@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute; // Perbaiki namespace Attribute
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable; // implementasi class Authenticatable
-use Tymon\JWTAuth\Contracts\JWTSubject; // implementasi JWTSubject
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class UserModel extends Authenticatable implements JWTSubject
 {
@@ -31,9 +31,7 @@ class UserModel extends Authenticatable implements JWTSubject
 
     protected $table = 'm_user';
     protected $primaryKey = 'user_id';
-    protected $fillable = ['username', 'nama', 'password', 'level_id', 'foto'];
-    // protected $hidden = ['password']; // jangan di tampilkan saat select
-    // protected $casts = ['password' => 'hashed']; // casting password agar otomatis di hash
+    protected $fillable = ['username', 'nama', 'password', 'level_id', 'image'];
 
     /**
      * Relasi ke tabel level
@@ -43,15 +41,18 @@ class UserModel extends Authenticatable implements JWTSubject
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
 
+    /**
+     * Mengambil role/kode level user, misalnya 'admin', 'kasir', dll.
+     */
     public function getRole()
     {
-        return $this->level->level_kode;
+        return $this->level->level_kode ?? null; // Pastikan kolom 'level_kode' ada di tabel level
     }
 
-    protected function foto(): Attribute
+    protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($foto) => url('/storage/post/' . $foto),
+            get: fn ($image) => url('/storage/post/' . $image),
         );
     }
 }

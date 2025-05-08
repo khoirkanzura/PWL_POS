@@ -68,14 +68,15 @@
                                     </label>
                                 </div>
                                 <div class="avatar-preview">
-                                    @if ($user->foto)
-                                        <div id="profilePhotoPreview" style="background-image: url('{{ asset('storage/uploads/user/' . $user->foto) }}');"></div>
+                                    @if ($user->image)
+                                        <div id="profilePhotoPreview" style="background-image: url('{{ asset('storage/uploads/user/' . $user->image) }}');"></div>
                                     @else
                                         <div id="profilePhotoPreview" class="default-avatar">
                                             <i class="fas fa-user"></i>
                                         </div>
                                     @endif
                                 </div>
+                                
                             </div>
                             <small class="text-muted d-block mt-2">Format: JPG, PNG, JPEG (Maks. 2MB)</small>
                         </div>
